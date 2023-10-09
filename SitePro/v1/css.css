@@ -12,3 +12,16 @@ h1{
 #currentpage{
     background-color: red;
 }
+
+.photo{
+    height:100px;
+}
+
+.header{
+    display:flex;
+    align-items: center;
+}
+
+h0{
+    color: rgb(16, 125, 248)
+}
