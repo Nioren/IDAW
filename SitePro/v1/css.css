@@ -1,0 +1,14 @@
+.menu{
+    display:flex;
+    font-size: 18px;
+    color:rgb(6, 194, 122)
+}
+
+h1{
+    color:rgb(13, 101, 201);
+    font-size: 38px;
+}
+
+#currentpage{
+    background-color: red;
+}
