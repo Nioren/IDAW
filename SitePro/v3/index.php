@@ -1,6 +1,7 @@
 <?php
     require_once("template_header.php");
     require_once("template_menu.php");
+    $currentLang = isset($_GET['lang']) ? $_GET['lang'] : 'fr';
     $currentPageId = 'accueil';
     if(isset($_GET['page'])) {
         $currentPageId = $_GET['page'];
@@ -10,11 +11,11 @@
     <h1 class="titre">Thomas CHAUVEL</h1>
 </header>
 <?php
-    renderMenuToHTML($currentPageId);
+    renderMenuToHTML($currentPageId,$currentLang);
 ?>
 <section class="corps">
     <?php
-        $pageToInclude = $currentPageId . ".php";
+        $pageToInclude = $currentLang . "/" . $currentPageId . ".php";
         if(is_readable($pageToInclude))
             require_once($pageToInclude);
         else
