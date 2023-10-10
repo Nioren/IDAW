@@ -1,0 +1,45 @@
+.menu{
+    display:flex;
+    font-size: 18px;
+    color:rgb(6, 194, 122)
+}
+
+h1{
+    color:rgb(13, 101, 201);
+    font-size: 38px;
+}
+
+a{
+    color:purple;
+}
+
+#currentpage{
+    background-color: red;
+    color:rgb(8, 214, 241);
+}
+
+.photo{
+    height:100px;
+}
+
+.header{
+    display:flex;
+    align-items: center;
+}
+
+h0{
+    color: rgb(16, 125, 248);
+    font-size:25px;
+}
+
+.logo{
+    height:100px;
+}
+
+.emotys{
+    height:300px;
+}
+
+body{
+    background-color: rgb(255, 255, 148);
+}

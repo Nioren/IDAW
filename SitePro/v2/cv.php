@@ -3,6 +3,7 @@
 ?>
 <?php
     require_once('template_menu.php');
+    renderMenuToHTML('cv');
 ?>
 <h1>Je mettrai mon CV ici... un jour...</h1>
 <?php

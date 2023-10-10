@@ -1,12 +1,3 @@
-<nav class="menu">
-            <ul>
-                <li><a href="index.php">Accueil</a></li>
-                <li><a href="cv.php">CV</a></li></div>
-                <li><a href="projets.php">Projets</a></li>
-                <li><a href="infos-technique.php">Infos techniques</a></li>
-            </ul>
-        </nav>
-
 <?php
 function renderMenuToHTML($currentPageId) {
     $mymenu = array(
@@ -14,10 +5,14 @@ function renderMenuToHTML($currentPageId) {
         'cv' => array( 'CV' ),
         'projets' => array('Projets')
     );
-    // ...
+    echo "<nav class='menu'>\n<ul>\n";
     foreach($mymenu as $pageId => $pageParameters) {
-        echo "...";
+        if ($pageId == $currentPageId) {
+        echo "<li><a href='".$pageId.".php' id='currentpage'>".$pageParameters[0]."</a></li>\n";
     }
-    // ...
+        else {echo "<li><a href='".$pageId.".php'>".$pageParameters[0]."</a></li>\n";
+    }
+}
+    echo "</ul>\n</nav>";
 }
 ?>
