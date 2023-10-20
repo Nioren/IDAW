@@ -76,7 +76,19 @@
                 let web = $("#inputWeb").val();
                 let remarques = $("#inputRemarques").val();
                 if (nom.trim() !== "") {
-                $("#studentsTableBody").append(`<tr><td>${nom}</td><td>${prenom}</td><td>${date}</td><td>${web}</td><td>${remarques}</td></tr>`);
+                $("#studentsTableBody").append(
+                    `<tr>
+                        <td>${nom}</td>
+                        <td>${prenom}</td>
+                        <td>${date}</td>
+                        <td>${web}</td>
+                        <td>${remarques}</td>
+                        <td> 
+                            <button class="edit-btn" data-nom="${nom}" data-prenom="${prenom}" data-date="${date}" data-web="${web}" data-remarques="${remarques}">Edit</button>
+                            <button class="delete-btn" data-nom="${nom}">Delete</button>
+                        </td>
+                    </tr>`
+                );
                 $("#inputNom").val("");
                 $("#inputPrenom").val("");
                 $("#inputDate").val("");

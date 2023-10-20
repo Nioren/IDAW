@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <title>tabletest</title>
+</head>
+<body>
+    <table id="usersTable" class="display">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de naissance</th>
+                <th>Aime le cours Web?</th>
+                <th>Remarques</th>
+                <th>CRUD</th>
+            </tr>
+        </thead>
+    </table>
+
+    <form id="addStudentForm">
+        <div class="form-group row">
+            <label for="inputNom" class="col-sm-2 col-form-label">Nom*</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="inputNom">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputPrenom" class="col-sm-2 col-form-label">Prénom</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="inputPrenom">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputDate" class="col-sm-2 col-form-label">Date de naissance</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="inputDate">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputWeb" class="col-sm-2 col-form-label">Aime le cours Web</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="inputWeb">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputRemarques" class="col-sm-2 col-form-label">Remarques</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="inputRemarques">
+            </div>
+        </div>
+        <div class="form-group row">
+            <span class="col-sm-2"></span>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary form-control">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            var dataTable = $('#usersTable').DataTable({
+                "ajax": {
+                    "url": "http://localhost/IDAW/TP4/exo5/users.php",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "nom" },
+                    { "data": "prenom" },
+                    { "data": "date" },
+                    { "data": "web" },
+                    { "data": "remarques" },
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return `
+                                <td>${nom}</td>
+                                <td>${prenom}</td>
+                                <td>${date}</td>
+                                <td>${web}</td>
+                                <td>${remarques}</td>
+                                <button class="edit-btn" data-id="${data.id}" data-nom="${data.nom}" data-prenom="${data.prenom}">Edit</button>
+                                <button class="delete-btn" data-id="${data.id}" data-nom="${data.nom}">Delete</button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+            $('#addUserForm').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: "http://localhost/IDAW/TP4/exo5/users.php",
+                    type: "POST",
+                    data: formData,
+                    success: function(data) {
+                        dataTable.ajax.reload();
+                        $('#addUserForm')[0].reset();
+                    },
+                    error: function(error) {
+                        alert("Une erreur s'est produite : " + error.statusText);
+                    }
+                });
+            });
+
+            $('#usersTable').on('click', '.edit-btn', function() {
+                var userId = $(this).data('id');
+                var nom = $(this).data('nom');
+                var prenom = $(this).data('prenom');
+
+                alert(`Éditer l'utilisateur ${nom} ${prenom} (ID: ${userId})`);
+            });
+
+            $('#usersTable').on('click', '.delete-btn', function() {
+                var userId = $(this).data('id');
+                var nom = $(this).data('nom');
+                var confirmation = confirm(`Êtes-vous sûr de vouloir supprimer ${nom} (ID: ${userId}) ?`);
+                if (confirmation) {
+                    alert(`Supprimer l'utilisateur ${nom} (ID: ${userId})`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

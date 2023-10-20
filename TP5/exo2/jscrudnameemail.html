@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <title>tabletest</title>
+</head>
+<body>
+    <table id="usersTable" class="display">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>CRUD</th>
+            </tr>
+        </thead>
+    </table>
+
+    <form id="addStudentForm">
+        <div class="form-group row">
+            <label for="inputName" class="col-sm-2 col-form-label">Name*</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="inputName">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="inputEmail">
+            </div>
+        </div>
+        <div class="form-group row">
+            <span class="col-sm-2"></span>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary form-control">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            var dataTable = $('#usersTable').DataTable({
+                "ajax": {
+                    "url": "http://localhost/IDAW/TP4/exo5/users.php",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "name" },
+                    { "data": "email" },
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            return `
+                                <td>${name}</td>
+                                <td>${email}</td>
+                                <button class="edit-btn" data-id="${data.id}" data-name="${data.name}" data-email="${data.email}">Edit</button>
+                                <button class="delete-btn" data-id="${data.id}" data-name="${data.name}">Delete</button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+            $('#addUserForm').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: "http://localhost/IDAW/TP4/exo5/users.php",
+                    type: "POST",
+                    data: formData,
+                    success: function(data) {
+                        dataTable.ajax.reload();
+                        $('#addUserForm')[0].reset();
+                    },
+                    error: function(error) {
+                        alert("Une erreur s'est produite : " + error.statusText);
+                    }
+                });
+            });
+
+            $('#usersTable').on('click', '.edit-btn', function() {
+                var userId = $(this).data('id');
+                var name = $(this).data('name');
+                var email = $(this).data('email');
+
+                alert(`Éditer l'utilisateur ${name} ${email} (ID: ${userId})`);
+            });
+
+            $('#usersTable').on('click', '.delete-btn', function() {
+                var userId = $(this).data('id');
+                var name = $(this).data('name');
+                var confirmation = confirm(`Êtes-vous sûr de vouloir supprimer ${name} (ID: ${userId}) ?`);
+                if (confirmation) {
+                    alert(`Supprimer l'utilisateur ${name} (ID: ${userId})`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
