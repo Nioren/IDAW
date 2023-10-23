@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https:////cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <title>tabletest</title>
 </head>
 <body>
@@ -54,8 +54,6 @@
                         "data": null,
                         "render": function(data, type, row) {
                             return `
-                                <td>${name}</td>
-                                <td>${email}</td>
                                 <button class="edit-btn" data-id="${data.id}" data-name="${data.name}" data-email="${data.email}">Edit</button>
                                 <button class="delete-btn" data-id="${data.id}" data-name="${data.name}">Delete</button>
                             `;
@@ -70,7 +68,8 @@
                 $.ajax({
                     url: "http://localhost/IDAW/TP4/exo5/users.php",
                     type: "POST",
-                    data: formData,
+                    data: JSON.stringify({ id: userId }),
+                        contentType: "application/json",
                     success: function(data) {
                         dataTable.ajax.reload();
                         $('#addUserForm')[0].reset();
@@ -85,8 +84,41 @@
                 var userId = $(this).data('id');
                 var name = $(this).data('name');
                 var email = $(this).data('email');
-
                 alert(`Éditer l'utilisateur ${name} ${email} (ID: ${userId})`);
+                var editForm = `
+                <form id="editUserForm">
+                    <input type="text" id="editName" value="${name}">
+                    <input type="text" id="editEmail" value="${email}">
+                    <button type="submit" data-id="${userId}" class="save-btn">Save</button>
+                </form>
+    `           ;
+
+                var row = $(this).closest('tr');
+                row.html(editForm);
+    
+                $('#editUserForm').submit(function(event) {
+                    event.preventDefault();
+                    var editedName = $('#editName').val();
+                    var editedEmail = $('#editEmail').val();
+                    var userId = $(this).find('.save-btn').data('id');
+                    var userData = {
+                        id: userId,
+                        name: editedName,
+                        email: editedEmail
+                    };
+                    $.ajax({
+                        url: "http://localhost/IDAW/TP4/exo5/users.php",
+                        type: "PUT",
+                        data: JSON.stringify(userData),
+                        contentType: "application/json",
+                        success: function(response) {
+                            console.log("Mise à jour réussie");
+                        },
+                        error: function(error) {
+                            console.error("Erreur de mise à jour : " + error.statusText);
+                        }
+                    });
+                });
             });
 
             $('#usersTable').on('click', '.delete-btn', function() {
@@ -94,7 +126,18 @@
                 var name = $(this).data('name');
                 var confirmation = confirm(`Êtes-vous sûr de vouloir supprimer ${name} (ID: ${userId}) ?`);
                 if (confirmation) {
-                    alert(`Supprimer l'utilisateur ${name} (ID: ${userId})`);
+                    $.ajax({
+                        url: "http://localhost/IDAW/TP4/exo5/users.php",
+                        type: "DELETE",
+                        data: JSON.stringify({ id: userId }),
+                        contentType: "application/json",
+                        success: function(response) {
+                            dataTable.ajax.reload();
+                        },
+                        error: function(error) {
+                            console.error("Erreur de suppression : " + error.statusText);
+                        }
+                    });
                 }
             });
         });
