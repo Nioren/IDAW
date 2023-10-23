@@ -96,7 +96,7 @@
                 var row = $(this).closest('tr');
                 row.html(editForm);
     
-                $('#editUserForm').submit(function(event) {
+                $(document).on ('submit', '#editUserForm', function(event) {
                     event.preventDefault();
                     var editedName = $('#editName').val();
                     var editedEmail = $('#editEmail').val();
@@ -113,6 +113,15 @@
                         contentType: "application/json",
                         success: function(response) {
                             console.log("Mise à jour réussie");
+                            var row = $(this).closest('tr');
+                            row.html(`
+                                <td>${editedName}</td>
+                                <td>${editedEmail}</td>
+                                <td>
+                                    <button class="edit-btn" data-id="${userId}" data-name="${editedName}" data-email="${editedEmail}">Edit</button>
+                                    <button class="delete-btn" data-id="${userId}" data-name="${editedName}">Delete</button>
+                                </td>
+                            `);
                         },
                         error: function(error) {
                             console.error("Erreur de mise à jour : " + error.statusText);
